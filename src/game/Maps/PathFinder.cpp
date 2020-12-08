@@ -345,11 +345,12 @@ void PathInfo::BuildPolyPath(const Vector3 &startPos, const Vector3 &endPos)
         // free and invalidate old path data
         clear();
 
-        unsigned int const threadId = ACE_Based::Thread::currentId();
+        /*
+        ACE_thread_t const threadId = ACE_Based::Thread::currentId();
 
         //if (threadId != m_navMeshQuery->m_owningThread)
             //sLog.outError("CRASH: We are using a dtNavMeshQuery from thread %u which belongs to thread %u!", threadId, m_navMeshQuery->m_owningThread);
-
+            */
         dtStatus dtResult = m_navMeshQuery->findPath(
                                 startPoly,          // start polygon
                                 endPoly,            // end polygon

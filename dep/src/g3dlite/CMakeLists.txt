@@ -61,7 +61,6 @@ set(g3dlite_SRCS
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/dep/include
   ${CMAKE_SOURCE_DIR}/dep/include/g3dlite
 )
 

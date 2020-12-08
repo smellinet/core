@@ -57,7 +57,7 @@
 
 INSTANTIATE_SINGLETON_1(ObjectMgr);
 
-#include "utf8cpp/utf8.h"
+#include "utf8.h"
 
 bool normalizePlayerName(std::string& name, size_t max_len)
 {
@@ -5739,7 +5739,7 @@ void ObjectMgr::PackGroupIds()
         delete result;
     }
 
-    BarGoLink bar(groupIds.size() + 1);
+    BarGoLink bar((uint32)groupIds.size() + 1);
     bar.step();
 
     uint32 groupId = 1;

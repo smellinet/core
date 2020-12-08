@@ -159,6 +159,12 @@ class ByteBuffer
             return *this;
         }
 
+        ByteBuffer &operator<<(long value)
+        {
+            append<long>(value);
+            return *this;
+        }
+
         ByteBuffer &operator<<(const std::string &value)
         {
             append((uint8 const *)value.c_str(), value.length());
@@ -243,6 +249,12 @@ class ByteBuffer
         ByteBuffer &operator>>(double &value)
         {
             value = read<double>();
+            return *this;
+        }
+
+    	ByteBuffer &operator>>(long &value)
+        {
+            value = read<long>();
             return *this;
         }
 

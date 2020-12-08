@@ -74,9 +74,7 @@
     #include <unistd.h>
     #include <pthread.h>
     #include <mach-o/arch.h>
-
     #include <sstream>
-    #include <CoreServices/CoreServices.h>
 #endif
 
 // SIMM include
@@ -274,22 +272,17 @@ void System::init() {
 #   elif defined(G3D_OSX)
 
         // Operating System:
-        SInt32 macVersion;
-        Gestalt(gestaltSystemVersion, &macVersion);
-
-        int major = (macVersion >> 8) & 0xFF;
-        int minor = (macVersion >> 4) & 0xF;
-        int revision = macVersion & 0xF;
-
-        {
-            char c[1000];
-            sprintf(c, "OS X %x.%x.%x", major, minor, revision); 
-            m_operatingSystem = c;
-        }
+        char str[256];
+        size_t size = sizeof(str);
+        int ret = sysctlbyname("kern.osrelease", str, &size, NULL, 0);
+        m_operatingSystem = str;
                  
         // Clock Cycle Timing Information:
-        Gestalt('pclk', &m_OSXCPUSpeed);
-        m_cpuSpeed = iRound((double)m_OSXCPUSpeed / (1024 * 1024));
+        int64_t clock;
+        size_t size2 = sizeof(clock);
+        ret = sysctlbyname("hw.cpufrequency", &clock, &size2, NULL, 0);
+        printf("%lld\n",clock);
+        m_cpuSpeed = iRound((double)clock / (1024 * 1024));
         m_secondsPerNS = 1.0 / 1.0e9;
         
         // System Architecture:

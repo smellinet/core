@@ -439,57 +439,59 @@ void AccountSearchHandler::ShowAccountListHelper(QueryResult* result, ChatHandle
         chatHandler.SendSysMessage(LANG_ACCOUNT_LIST_BAR);
     }
 
-    ///- Circle through accounts
-    AccountTypes sessionAccess = chatHandler.GetSession() ? chatHandler.GetSession()->GetSecurity() : SEC_CONSOLE;
-    do
+    if (result)
     {
-        // check limit
-        if (count == limit)
-            break;
-
-        Field *fields = result->Fetch();
-        uint32 account = fields[0].GetUInt32();
-
-        WorldSession* session = sWorld.FindSession(account);
-        Player* player = session ? session->GetPlayer() : NULL;
-        char const* char_name = player ? player->GetName() : " - ";
-
-        std::string lastIp = chatHandler.GetMangosString(LANG_ERROR);
-        bool showIp = true;
-
-        AccountTypes security = sAccountMgr.GetSecurity(account);
-        if (sessionAccess < security)
-            showIp = false;
-        else if (sessionAccess < SEC_ADMINISTRATOR && security > SEC_PLAYER) // Only admins can see GM IPs
-            showIp = false;
-
-        if (showIp)
+        ///- Circle through accounts
+        AccountTypes sessionAccess = chatHandler.GetSession() ? chatHandler.GetSession()->GetSecurity() : SEC_CONSOLE;
+        do
         {
-            lastIp = fields[2].GetCppString();
-        }
-        else
-        {
-            lastIp = "-";
-        }
+            // check limit
+            if (count == limit)
+                break;
 
-        std::string acc_name = fields[1].GetCppString();
-        if (sAccountMgr.IsAccountBanned(account))
-            acc_name = acc_name + " [BANNED]";
+            Field *fields = result->Fetch();
+            uint32 account = fields[0].GetUInt32();
 
-        if (chatHandler.GetSession())
-            chatHandler.PSendSysMessage(LANG_ACCOUNT_LIST_LINE_CHAT,
-                account, acc_name.c_str(), char_name,
-                chatHandler.playerLink(lastIp).c_str(),
-                security, fields[4].GetUInt32());
-        else
-            chatHandler.PSendSysMessage(LANG_ACCOUNT_LIST_LINE_CONSOLE,
-                account, acc_name.c_str(), char_name,
-                chatHandler.playerLink(lastIp).c_str(),
-                security, fields[4].GetUInt32());
+            WorldSession* session = sWorld.FindSession(account);
+            Player* player = session ? session->GetPlayer() : NULL;
+            char const* char_name = player ? player->GetName() : " - ";
 
-        ++count;
-    } while (result->NextRow());
+            std::string lastIp = chatHandler.GetMangosString(LANG_ERROR);
+            bool showIp = true;
 
+            AccountTypes security = sAccountMgr.GetSecurity(account);
+            if (sessionAccess < security)
+                showIp = false;
+            else if (sessionAccess < SEC_ADMINISTRATOR && security > SEC_PLAYER) // Only admins can see GM IPs
+                showIp = false;
+
+            if (showIp)
+            {
+                lastIp = fields[2].GetCppString();
+            }
+            else
+            {
+                lastIp = "-";
+            }
+
+            std::string acc_name = fields[1].GetCppString();
+            if (sAccountMgr.IsAccountBanned(account))
+                acc_name = acc_name + " [BANNED]";
+
+            if (chatHandler.GetSession())
+                chatHandler.PSendSysMessage(LANG_ACCOUNT_LIST_LINE_CHAT,
+                                            account, acc_name.c_str(), char_name,
+                                            chatHandler.playerLink(lastIp).c_str(),
+                                            security, fields[4].GetUInt32());
+            else
+                chatHandler.PSendSysMessage(LANG_ACCOUNT_LIST_LINE_CONSOLE,
+                                            account, acc_name.c_str(), char_name,
+                                            chatHandler.playerLink(lastIp).c_str(),
+                                            security, fields[4].GetUInt32());
+
+            ++count;
+        } while (result->NextRow());
+    }
     if (!chatHandler.GetSession())                                         // not output header for online case
         chatHandler.SendSysMessage(LANG_ACCOUNT_LIST_BAR);
 }

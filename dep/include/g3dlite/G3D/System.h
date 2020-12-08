@@ -21,7 +21,7 @@
 #include <string>
 
 #ifdef G3D_OSX
-#   include <CoreServices/CoreServices.h>
+//#   include <CoreServices/CoreServices.h>
 #endif
 
 namespace G3D {
@@ -128,7 +128,7 @@ private:
 
 #ifdef G3D_OSX
     /** In Cycles/Second */
-    SInt32         m_OSXCPUSpeed;
+    signed int         m_OSXCPUSpeed;
     double         m_secondsPerNS;
 #endif
 

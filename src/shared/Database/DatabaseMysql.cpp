@@ -161,7 +161,6 @@ bool MySQLConnection::HandleMySQLError(uint32 errNo)
     {
         case CR_SERVER_GONE_ERROR:
         case CR_SERVER_LOST:
-        case CR_INVALID_CONN_HANDLE:
         case CR_SERVER_LOST_EXTENDED:
         {
             mysql_close(mMysql);
